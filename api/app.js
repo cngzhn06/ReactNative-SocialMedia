@@ -5,6 +5,7 @@ const mongoDB = require('./config/mongo')
 const cors = require('cors')
 
 const User = require('./routes/user')
+const Post = require('./routes/post')
 
 const PORT = process.env.PORT || 5010;
 
@@ -20,6 +21,7 @@ app.get('/',(req,res) => {
 });
 
 app.use('/api', User)
+app.use('/api', Post)
 
 
 mongoDB();

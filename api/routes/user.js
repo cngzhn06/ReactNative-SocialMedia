@@ -148,4 +148,21 @@ router.post("/users/unfollow", async (req, res) => {
   }
 });
 
+
+router.get("/profile/:userId", async(req,res) => {
+  try{
+    const userId = req.params.userId;
+
+    const user = await User.findById(userId);
+
+    if(!user){
+      return res.status(404).json({message:"kullanıcı bulunamadı"})
+    }
+    return res.status(200).json({user})
+  }
+  catch(error) {
+  console.log("🚀 ~ router.get ~ error:", error)
+  }
+})
+
 module.exports = router;
