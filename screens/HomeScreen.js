@@ -1,4 +1,11 @@
-import { Image, ScrollView, StyleSheet, Text, View } from "react-native";
+import {
+  Dimensions,
+  Image,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import React, { useCallback, useContext, useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { jwtDecode } from "jwt-decode";
@@ -9,6 +16,8 @@ import { AntDesign } from "@expo/vector-icons";
 import { FontAwesome } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 import { useFocusEffect } from "@react-navigation/native";
+
+const windowWidth = Dimensions.get("window").width;
 
 export default function HomeScreen() {
   const { userId, setUserId } = useContext(UserType);
@@ -72,8 +81,8 @@ export default function HomeScreen() {
       const updatedPosts = posts.map((post) =>
         post._id === updatedPost._id ? updatedPost : post
       );
-      console.log("updated",updatedPosts)
-    
+      console.log("updated", updatedPosts);
+
       setPosts(updatedPosts);
     } catch (error) {
       console.error("Error unliking post:", error);
@@ -81,62 +90,36 @@ export default function HomeScreen() {
   };
 
   return (
-    <ScrollView style={{ marginTop: 50, flex: 1, backgroundColor: "white" }}>
+    <ScrollView style={styles.scrollView}>
       <View style={{ alignItems: "center", marginTop: 20 }}>
         <Image
-          style={{
-            width: 60,
-            height: 40,
-            resizeMode: "contain",
-          }}
+          style={styles.logoImage}
           source={{
             uri: "https://upload.wikimedia.org/wikipedia/commons/4/47/PNG_transparency_demonstration_1.png",
           }}
         />
       </View>
 
-      <View style={{ marginTop: 20 }}>
+      <View>
         {posts?.map((post, index) => (
           <View key={index}>
-            <View
-              style={{
-                padding: 15,
-                borderColor: "#D0D0D0",
-                borderTopWidth: 1,
-                flexDirection: "row",
-                gap: 10,
-                marginVertical: 10,
-              }}
-            >
+            <View style={styles.postContainer}>
               <Image
-                style={{
-                  width: 40,
-                  height: 40,
-                  borderRadius: 20,
-                  resizeMode: "contain",
-                }}
-                source={{
-                  uri: "https://upload.wikimedia.org/wikipedia/commons/4/47/PNG_transparency_demonstration_1.png",
-                }}
+                style={styles.postImage}
+                source={require('../assets/indir.jpeg')}
               />
+              <Text style={styles.postUserName}>{post?.user?.name}</Text>
             </View>
-            <View style={{}}>
-              <Text style={{fontSize:15,fontWeight:'bold',marginBottom:4}}>  {post?.user?.name}</Text>
+            <View style={styles.contentContainer}>
               <Text>{post?.content}</Text>
-              <View
-                style={{
-                  flexDirection: "row",
-                  alignItems: "center",
-                  gap: 10,
-                  marginTop: 15,
-                }}
-              >
+              <View style={styles.postActionsContainer}>
                 {post?.likes?.includes(userId) ? (
                   <AntDesign
                     onPress={() => handleDislike(post?._id)}
                     name="heart"
                     size={18}
                     color="red"
+                    style={styles.postActionsIconLiked}
                   />
                 ) : (
                   <AntDesign
@@ -146,14 +129,10 @@ export default function HomeScreen() {
                     color="black"
                   />
                 )}
-
-                <FontAwesome name="comment-o" size={18} color="black" />
-
-                <Ionicons name="share-social-outline" size={18} color="black" />
               </View>
 
-              <Text style={{ marginTop: 7, color: "gray" }}>
-                {post?.likes?.length} likes • {post?.replies?.length} reply
+              <Text style={styles.postLikesText}>
+                {post?.likes?.length} Beğeni 
               </Text>
             </View>
           </View>
@@ -163,4 +142,57 @@ export default function HomeScreen() {
   );
 }
 
-const styles = StyleSheet.create({});
+
+const styles = StyleSheet.create({
+  scrollView: {
+    marginTop: windowWidth * 0.124,
+    flex: 1,
+    backgroundColor: "white",
+  },
+  logoImage: {
+    width: windowWidth * 0.2,
+    height: windowWidth * 0.15,
+    resizeMode: "contain",
+  },
+  postContainer: {
+    flexDirection: "row",
+    padding: windowWidth * 0.02,
+    borderColor: "#D0D0D0",
+    borderTopWidth: 1,
+    gap: windowWidth * 0.01,
+    marginVertical: windowWidth * 0.01,
+    alignItems:'center',
+
+  },
+  postImage: {
+    width: windowWidth*0.09,
+    height: windowWidth*0.09,
+    borderRadius: windowWidth*0.1,
+    resizeMode: "contain",
+  },
+  postUserName: {
+    fontSize: windowWidth*0.04,
+    fontWeight: "bold",
+    marginLeft:windowWidth*0.01
+  },
+  postActionsContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: windowWidth*0.02,
+    marginTop: windowWidth*0.02,
+  },
+  postActionsIcon: {
+    fontSize: windowWidth*0.045,
+    color: "black",
+  },
+  postActionsIconLiked: {
+    color: "red",
+  },
+  postLikesText: {
+    marginVertical: windowWidth*0.02,
+    color: "gray",
+  },
+  contentContainer:{
+    marginLeft:windowWidth*0.02
+  }
+});

@@ -14,6 +14,7 @@ import axios from "axios";
 import { UserType } from "../UserContext";
 import "core-js/stable/atob";
 import User from "../components/User";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function ActivityScreen() {
   const [selectedButton, setSelctedButton] = useState("people");
@@ -46,30 +47,17 @@ export default function ActivityScreen() {
   }, []);
 
   return (
-    <ScrollView style={{ marginTop: 50 }}>
-      <View style={{ padding: 10 }}>
-        <Text style={{ fontSize: 18, fontWeight: "bold" }}>Activity</Text>
+    <ScrollView>
+      <SafeAreaView>
+      <View style={styles.container}>
+        <Text style={styles.headerText}>Aktiviteler</Text>
 
         <View
-          style={{
-            flexDirection: "row",
-            alignItems: "center",
-            gap: 10,
-            marginTop: 12,
-          }}
+          style={styles.buttonContainer}
         >
           <TouchableOpacity
             onPress={() => handleButtonClick("people")}
-            style={[
-              {
-                flex: 1,
-                paddingVertical: 10,
-                paddingHorizontal: 20,
-                backgroundColor: "white",
-                borderColor: "#D0D0D0",
-                borderRadius: 6,
-                borderWidth: 0.7,
-              },
+            style={[styles.button,
               selectedButton === "people" ? { backgroundColor: "black" } : null,
             ]}
           >
@@ -81,65 +69,10 @@ export default function ActivityScreen() {
                   : { color: "black" },
               ]}
             >
-              People
+              Tanıyor olabileceğin kişiler
             </Text>
           </TouchableOpacity>
 
-          <TouchableOpacity
-            onPress={() => handleButtonClick("all")}
-            style={[
-              {
-                flex: 1,
-                paddingVertical: 10,
-                paddingHorizontal: 20,
-                backgroundColor: "white",
-                borderColor: "#D0D0D0",
-                borderRadius: 6,
-                borderWidth: 0.7,
-              },
-              selectedButton === "all" ? { backgroundColor: "black" } : null,
-            ]}
-          >
-            <Text
-              style={[
-                { textAlign: "center", fontWeight: "bold" },
-                selectedButton === "all"
-                  ? { color: "white" }
-                  : { color: "black" },
-              ]}
-            >
-              All
-            </Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            onPress={() => handleButtonClick("requests")}
-            style={[
-              {
-                flex: 1,
-                paddingVertical: 10,
-                paddingHorizontal: 20,
-                backgroundColor: "white",
-                borderColor: "#D0D0D0",
-                borderRadius: 6,
-                borderWidth: 0.7,
-              },
-              selectedButton === "requests"
-                ? { backgroundColor: "black" }
-                : null,
-            ]}
-          >
-            <Text
-              style={[
-                { textAlign: "center", fontWeight: "bold" },
-                selectedButton === "requests"
-                  ? { color: "white" }
-                  : { color: "black" },
-              ]}
-            >
-              Requests
-            </Text>
-          </TouchableOpacity>
         </View>
 
         <View>
@@ -152,12 +85,36 @@ export default function ActivityScreen() {
           )}
         </View>
       </View>
+      </SafeAreaView>
     </ScrollView>
   );
 }
 const styles = StyleSheet.create({
+  container: {
+    padding: windowWidth*0.02,
+  },
   headerText: {
-    fontSize: windowWidth * 0.05,
+    fontSize: windowWidth*0.08,
     fontWeight: "bold",
+  },
+  buttonContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginTop: windowWidth*0.02,
+  },
+  button: {
+    flex: 1,
+    paddingVertical: windowWidth*0.02,
+    backgroundColor: "white",
+    borderRadius: windowWidth*0.022,
+  },
+  selectedButton: {
+    backgroundColor: "black",
+  },
+  buttonText: {
+    textAlign: "center",
+    fontWeight: "bold",
+    color: "black",
   },
 });
