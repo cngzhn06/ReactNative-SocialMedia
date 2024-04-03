@@ -7,7 +7,7 @@ import { useNavigation } from "@react-navigation/native";
 
 const ProfileScreen = () => {
   const [user, setUser] = useState("");
-  const navigation = useNavigation()
+  const navigation = useNavigation();
   const { userId, setUserId } = useContext(UserType);
   useEffect(() => {
     const fetchProfile = async () => {
@@ -26,13 +26,13 @@ const ProfileScreen = () => {
   });
 
   const logout = () => {
-      clearAuthToken();
-  }
+    clearAuthToken();
+  };
   const clearAuthToken = async () => {
-      await AsyncStorage.removeItem("authToken");
-      console.log("Cleared auth token");
-      navigation.replace("Login")
-  }
+    await AsyncStorage.removeItem("authToken");
+    console.log("Cleared auth token");
+    navigation.replace("Login");
+  };
 
   return (
     <View style={{ marginTop: 55, padding: 15 }}>
@@ -72,39 +72,26 @@ const ProfileScreen = () => {
               }}
             />
           </View>
-
-         
         </View>
         <Text style={{ color: "gray", fontSize: 15, marginTop: 10 }}>
           {user?.followers?.length} followers
         </Text>
-        <View style={{flexDirection:"row",alignItems:"center",gap:10,marginTop:20}}>
+        <View
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+            gap: 10,
+            marginTop: 20,
+          }}
+        >
           <Pressable
-            style={{
-              flex: 1,
-              justifyContent: "center",
-              alignItems: "center",
-              padding: 10,
-              borderColor: "#D0D0D0",
-              borderWidth: 1,
-              borderRadius: 5,
-            }}
+            style={styles.button}
+            onPress={() => navigation.navigate("Edit")}
           >
-            <Text>Edit Profile</Text>
+            <Text>Profili Düzenle</Text>
           </Pressable>
 
-          <Pressable
-            onPress={logout}
-            style={{
-              flex: 1,
-              justifyContent: "center",
-              alignItems: "center",
-              padding: 10,
-              borderColor: "#D0D0D0",
-              borderWidth: 1,
-              borderRadius: 5,
-            }}
-          >
+          <Pressable onPress={logout} style={styles.button}>
             <Text>Logout</Text>
           </Pressable>
         </View>
@@ -115,4 +102,14 @@ const ProfileScreen = () => {
 
 export default ProfileScreen;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  button: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 10,
+    borderColor: "#D0D0D0",
+    borderWidth: 1,
+    borderRadius: 5,
+  },
+});

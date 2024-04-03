@@ -50,7 +50,6 @@ export default function LoginScreen() {
       password: password,
     };
     axios.post("http://localhost:5010/api/login",user).then((response) => {
-        console.log(response);
         const token = response.data.token;
         AsyncStorage.setItem("authToken", token);
         navigation.navigate("Main");

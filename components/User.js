@@ -7,7 +7,6 @@ const windowWidth = Dimensions.get("window").width;
 
 export default function User({ item }) {
   const { userId, setUserId } = useContext(UserType);
-  console.log("🚀 ~ User ~ userId:", userId);
   const [requestSent, setRequestSent] = useState(false);
 
   const sendFollow = async (currentUserId, selectedUserId) => {
@@ -128,7 +127,7 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     textAlign: "center",
-    fontSize: windowWidth*0.035,
+    fontSize: windowWidth*0.04,
     fontWeight: "bold",
   },
 });

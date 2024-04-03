@@ -30,7 +30,6 @@ export default function RegisterScreen() {
     }
 
     axios.post("http://localhost:5010/api/register",user).then((response) => {
-      console.log(response)
       Alert.alert(
         "Kayıt Başarılı",
         "Başarıyla Kayıt Oldunuz"

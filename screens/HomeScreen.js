@@ -53,7 +53,6 @@ export default function HomeScreen() {
     }
   };
 
-  console.log(posts);
 
   const handleLike = async (postId) => {
     try {
