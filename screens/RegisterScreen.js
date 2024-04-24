@@ -32,7 +32,7 @@ export default function RegisterScreen() {
     axios.post("http://localhost:5010/api/register",user).then((response) => {
       Alert.alert(
         "Kayıt Başarılı",
-        "Başarıyla Kayıt Oldunuz"
+        "Mail kutunuzu kontrol ediniz."
       );
       navigation.navigate('Login')
       setName("");

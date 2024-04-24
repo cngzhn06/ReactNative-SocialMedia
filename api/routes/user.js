@@ -35,7 +35,7 @@ const sendVerificationEmail = async (email, verificationToken) => {
     service: "gmail",
     auth: {
       user: "cngzhnmt2@gmail.com",
-      pass: "ovabeewklkfwpsma",
+      pass: `${process.env.PASS}`,
     },
   });
 
@@ -43,7 +43,7 @@ const sendVerificationEmail = async (email, verificationToken) => {
     from: "threads.com",
     to: email,
     subject: "Email Verification",
-    text: `please click the following link to verify your email http://localhost:5009/user/verify/${verificationToken}`,
+    text: `please click the following link to verify your email http://localhost:5010/user/verify/${verificationToken}`,
   };
 
   try {

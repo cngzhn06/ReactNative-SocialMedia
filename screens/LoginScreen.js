@@ -24,42 +24,39 @@ export default function LoginScreen() {
   const navigation = useNavigation();
 
   useEffect(() => {
-    const checkLoginStatus = async() => {
-      try{
+    const checkLoginStatus = async () => {
+      try {
         const token = await AsyncStorage.getItem("authToken");
 
-        if(token){
+        if (token) {
           setTimeout(() => {
-            navigation.replace("Main")
-          },400)
+            navigation.replace("Main");
+          }, 400);
         }
+      } catch (error) {
+        console.error("Error checking login status:", error);
       }
-      catch(error){
-        console.log("🚀 ~ checkLoginStatus ~ error:", error)
-        
-      }
-    }
+    };
 
     checkLoginStatus();
-  })
-
+  }, [navigation]);
 
   const handleLogin = () => {
     const user = {
       email: email,
       password: password,
     };
-    axios.post("http://localhost:5010/api/login",user).then((response) => {
+
+    axios
+      .post("http://localhost:5010/api/login", user)
+      .then((response) => {
         const token = response.data.token;
         AsyncStorage.setItem("authToken", token);
         navigation.navigate("Main");
       })
       .catch((error) => {
-        console.log("🚀 ~ axios.post ~ error:", error);
-        Alert.alert(
-          "Giriş Başarısız",
-          "Giriş yaparken bir hatayla karşılaşıldı"
-        );
+        console.error("Error during login:", error);
+        Alert.alert("Giriş Başarısız", "Giriş yaparken bir hatayla karşılaşıldı");
       });
   };
 
@@ -76,68 +73,52 @@ export default function LoginScreen() {
 
       <KeyboardAvoidingView>
         <View style={styles.textCont}>
-          <Text style={styles.text}>Hesabınızla Giriş Yapın</Text>
+          <Text style={styles.titleText}>Hesabınızla Giriş Yapın</Text>
         </View>
 
         <View style={styles.inputCont}>
           <View style={styles.inputWrap}>
             <MaterialCommunityIcons
-              style={{ marginLeft: windowWidth * 0.02 }}
+              style={styles.icon}
               name="email"
               size={windowWidth * 0.06}
               color="black"
             />
             <TextInput
+              style={styles.input}
               autoCapitalize="none"
               value={email}
-              onChangeText={(input) => setEmail(input)}
-              style={{
-                color: "gray",
-                marginVertical: windowWidth * 0.02,
-                width: windowWidth * 0.7,
-                fontSize: email ? 16 : 16,
-              }}
+              onChangeText={setEmail}
               placeholder="Email"
-              placeholderTextColor={"gray"}
+              placeholderTextColor="gray"
             />
           </View>
-        </View>
-
-        <View style={{ marginTop: windowWidth * 0.03 }}>
           <View style={styles.inputWrap}>
             <MaterialCommunityIcons
-              style={{ marginLeft: windowWidth * 0.02 }}
+              style={styles.icon}
               name="shield-lock"
               size={windowWidth * 0.06}
               color="black"
             />
             <TextInput
+              style={styles.input}
               autoCapitalize="none"
               value={password}
-              onChangeText={(input) => setPassword(input)}
-              style={{
-                color: "gray",
-                marginVertical: windowWidth * 0.02,
-                width: windowWidth * 0.7,
-                fontSize: password ? 16 : 16,
-              }}
+              onChangeText={setPassword}
               placeholder="Şifre"
-              placeholderTextColor={"gray"}
+              placeholderTextColor="gray"
               secureTextEntry
             />
           </View>
         </View>
 
-        <View style={{ marginTop: windowWidth * 0.07, alignItems: "center" }}>
+        <View style={styles.buttonCont}>
           <Pressable style={styles.pressable} onPress={handleLogin}>
             <Text style={styles.pressableText}>Login</Text>
           </Pressable>
         </View>
 
-        <Pressable
-          onPress={() => navigation.navigate("Register")}
-          style={{ marginTop: windowWidth * 0.05 }}
-        >
+        <Pressable onPress={() => navigation.navigate("Register")}>
           <Text style={styles.registerText}>
             Hesabınız yok mu? Hemen oluşturun
           </Text>
@@ -161,14 +142,14 @@ const styles = StyleSheet.create({
     height: windowWidth * 0.4,
     resizeMode: "contain",
   },
-  text: {
-    fontSize: windowWidth * 0.04,
-    fontWeight: "bold",
-    marginTop: windowWidth * 0.05,
-  },
   textCont: {
     justifyContent: "center",
     alignItems: "center",
+  },
+  titleText: {
+    fontSize: windowWidth * 0.04,
+    fontWeight: "bold",
+    marginTop: windowWidth * 0.05,
   },
   inputCont: {
     marginTop: windowWidth * 0.07,
@@ -176,18 +157,28 @@ const styles = StyleSheet.create({
   inputWrap: {
     flexDirection: "row",
     alignItems: "center",
-    gap: windowWidth * 0.01,
     borderColor: "#D0D0D0",
     borderWidth: 1,
     paddingVertical: windowWidth * 0.02,
     borderRadius: windowWidth * 0.02,
+    marginVertical: windowWidth * 0.02,
+  },
+  icon: {
+    marginLeft: windowWidth * 0.02,
+  },
+  input: {
+    color: "gray",
+    width: windowWidth * 0.7,
+    fontSize: 16,
+  },
+  buttonCont: {
+    marginTop: windowWidth * 0.07,
+    alignItems: "center",
   },
   pressable: {
     width: windowWidth * 0.5,
     backgroundColor: "black",
     padding: windowWidth * 0.02,
-    marginTop: windowWidth * 0.05,
-    marginVertical: "auto",
     borderRadius: windowWidth * 0.2,
   },
   pressableText: {
@@ -200,5 +191,6 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontWeight: "bold",
     fontSize: windowWidth * 0.03,
+    marginTop: windowWidth * 0.05,
   },
 });
