@@ -49,65 +49,46 @@ export default function ActivityScreen() {
   return (
     <ScrollView>
       <SafeAreaView>
-      <View style={styles.container}>
-        <Text style={styles.headerText}>Aktiviteler</Text>
+        <View style={styles.container}>
+          <Text style={styles.headerText}>Aktiviteler</Text>
 
-        <View
-          style={styles.buttonContainer}
-        >
-          <TouchableOpacity
-            onPress={() => handleButtonClick("people")}
-            style={[styles.button,
-              selectedButton === "people" ? { backgroundColor: "black" } : null,
-            ]}
-          >
-            <Text
-              style={[
-                { textAlign: "center", fontWeight: "bold" },
-                selectedButton === "people"
-                  ? { color: "white" }
-                  : { color: "black" },
-              ]}
-            >
-              Tanıyor olabileceğin kişiler
-            </Text>
-          </TouchableOpacity>
+          <View style={styles.buttonContainer}>
+            <Text>Tanıyor olabileceğin kişiler</Text>
+          </View>
 
+          <View>
+            {selectedButton === "people" && (
+              <View style={{ marginTop: 20 }}>
+                {users?.map((item, index) => (
+                  <User key={index} item={item} />
+                ))}
+              </View>
+            )}
+          </View>
         </View>
-
-        <View>
-          {selectedButton === "people" && (
-            <View style={{ marginTop: 20 }}>
-              {users?.map((item, index) => (
-                <User key={index} item={item} />
-              ))}
-            </View>
-          )}
-        </View>
-      </View>
       </SafeAreaView>
     </ScrollView>
   );
 }
 const styles = StyleSheet.create({
   container: {
-    padding: windowWidth*0.02,
+    padding: windowWidth * 0.02,
   },
   headerText: {
-    fontSize: windowWidth*0.08,
+    fontSize: windowWidth * 0.08,
     fontWeight: "bold",
   },
   buttonContainer: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    marginTop: windowWidth*0.02,
+    marginTop: windowWidth * 0.02,
   },
   button: {
     flex: 1,
-    paddingVertical: windowWidth*0.02,
+    paddingVertical: windowWidth * 0.02,
     backgroundColor: "white",
-    borderRadius: windowWidth*0.022,
+    borderRadius: windowWidth * 0.022,
   },
   selectedButton: {
     backgroundColor: "black",

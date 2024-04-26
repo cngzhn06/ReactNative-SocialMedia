@@ -89,5 +89,17 @@ router.get("/get-posts", async (req, res) => {
   }
 });
 
+router.get("/user/:userId/posts", async (req, res) => {
+  try {
+    const userId = req.params.userId;
+    const userPosts = await Post.find({ user: userId }).sort({ createdAt: -1 });
+
+    res.status(200).json(userPosts);
+  } catch (error) {
+    console.error("🚀 ~ router.get ~ error:", error);
+    res.status(500).json({ message: "Gönderiler alınırken hata oluştu" });
+  }
+});
+
 
 module.exports = router;
