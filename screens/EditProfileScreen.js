@@ -1,154 +1,88 @@
-import { Dimensions, Image, KeyboardAvoidingView, Pressable, SafeAreaView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
-import React, { useContext, useState } from 'react'
-import { useNavigation } from '@react-navigation/native'
-import { UserType } from '../UserContext';
-import { MaterialCommunityIcons } from "@expo/vector-icons";
-
-
+import React, { useState, useContext } from "react";
+import {
+  SafeAreaView,
+  TextInput,
+  Pressable,
+  Text,
+  StyleSheet,
+  Dimensions,
+} from "react-native";
+import { useNavigation } from "@react-navigation/native";
+import { UserType } from "../UserContext";
+import axios from "axios";
 
 const windowWidth = Dimensions.get("window").width;
 
 export default function EditProfileScreen() {
   const navigation = useNavigation();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("")
-  const { userId, setUserId } = useContext(UserType);
-  console.log("🚀 ~ EditProfileScreen ~ userId:", userId)
+  const { userId } = useContext(UserType);
+  const [newUsername, setNewUsername] = useState("");
 
-  
-  const handleUpdate = () => {
-    navigation.navigate("Home")
-  }
-  
+  const handleUpdateUsername = async () => {
+    try {
+      const response = await axios.put(
+        "http://localhost:5010/api/update-username",
+        {
+          userId,
+          newUsername,
+        }
+      );
+
+      if (response.status === 200) {
+        console.log("Kullanıcı adı güncellendi:", response.data.user);
+        navigation.navigate("Home"); // Başarılı olursa ana ekrana yönlendir
+      } else {
+        console.error("Hata:", response.data.message); // Hata durumunda konsola yaz
+      }
+    } catch (error) {
+      console.error("API çağrısı sırasında hata:", error);
+    }
+  };
+
+  const handleBack = async () => {
+    navigation.navigate("Home");
+  };
+
   return (
     <SafeAreaView style={styles.container}>
-    <View style={styles.logoView}>
-      <Image
-        style={styles.logo}
-        source={{
-          uri: "https://vectorflags.s3.amazonaws.com/flags/lk-circle-01.png",
-        }}
+      <TextInput
+        style={styles.input}
+        value={newUsername}
+        onChangeText={setNewUsername}
+        autoCapitalize="none"
+        placeholder="Yeni kullanıcı adı"
       />
-    </View>
-
-    <KeyboardAvoidingView>
-      <View style={styles.textCont}>
-        <Text style={styles.titleText}>Hesabınızla Güncelleyin</Text>
-      </View>
-
-      <View style={styles.inputCont}>
-        <View style={styles.inputWrap}>
-          <MaterialCommunityIcons
-            style={styles.icon}
-            name="email"
-            size={windowWidth * 0.06}
-            color="black"
-          />
-          <TextInput
-            style={styles.input}
-            autoCapitalize="none"
-            value={email}
-            onChangeText={setEmail}
-            placeholder="Email"
-            placeholderTextColor="gray"
-          />
-        </View>
-        <View style={styles.inputWrap}>
-          <MaterialCommunityIcons
-            style={styles.icon}
-            name="shield-lock"
-            size={windowWidth * 0.06}
-            color="black"
-          />
-          <TextInput
-            style={styles.input}
-            autoCapitalize="none"
-            value={password}
-            onChangeText={setPassword}
-            placeholder="Şifre"
-            placeholderTextColor="gray"
-            secureTextEntry
-          />
-        </View>
-      </View>
-
-      <View style={styles.buttonCont}>
-        <Pressable style={styles.pressable} onPress={handleUpdate}>
-          <Text style={styles.pressableText}>Onayla</Text>
-        </Pressable>
-      </View>
-
-      <Pressable onPress={() => navigation.navigate("Register")}>
-
+      <Pressable style={styles.button} onPress={handleUpdateUsername}>
+        <Text style={styles.buttonText}>Güncelle</Text>
       </Pressable>
-    </KeyboardAvoidingView>
-  </SafeAreaView>
-);
+      <Pressable style={styles.button} onPress={handleBack}>
+        <Text style={styles.buttonText}>geri</Text>
+      </Pressable>
+    </SafeAreaView>
+  );
 }
 
 const styles = StyleSheet.create({
-container: {
-  flex: 1,
-  backgroundColor: "white",
-  alignItems: "center",
-},
-logoView: {
-  marginTop: windowWidth * 0.1,
-},
-logo: {
-  width: windowWidth * 0.5,
-  height: windowWidth * 0.4,
-  resizeMode: "contain",
-},
-textCont: {
-  justifyContent: "center",
-  alignItems: "center",
-},
-titleText: {
-  fontSize: windowWidth * 0.04,
-  fontWeight: "bold",
-  marginTop: windowWidth * 0.05,
-},
-inputCont: {
-  marginTop: windowWidth * 0.2,
-},
-inputWrap: {
-  flexDirection: "row",
-  alignItems: "center",
-  borderColor: "#D0D0D0",
-  borderWidth: 1,
-  paddingVertical: windowWidth * 0.02,
-  borderRadius: windowWidth * 0.02,
-  marginVertical: windowWidth * 0.02,
-},
-icon: {
-  marginLeft: windowWidth * 0.02,
-},
-input: {
-  color: "gray",
-  width: windowWidth * 0.7,
-  fontSize: 16,
-},
-buttonCont: {
-  marginTop: windowWidth * 0.07,
-  alignItems: "center",
-},
-pressable: {
-  width: windowWidth * 0.5,
-  backgroundColor: "black",
-  padding: windowWidth * 0.02,
-  borderRadius: windowWidth * 0.2,
-},
-pressableText: {
-  textAlign: "center",
-  fontWeight: "bold",
-  fontSize: windowWidth * 0.06,
-  color: "white",
-},
-registerText: {
-  textAlign: "center",
-  fontWeight: "bold",
-  fontSize: windowWidth * 0.03,
-  marginTop: windowWidth * 0.05,
-},
+  container: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: "gray",
+    padding: windowWidth*0.02,
+    marginBottom: windowWidth*0.04,
+    width: windowWidth * 0.8,
+    borderRadius:windowWidth*0.03
+  },
+  button: {
+    backgroundColor: "black",
+    padding: windowWidth*0.03,
+    borderRadius: windowWidth*0.04,
+  },
+  buttonText: {
+    color: "white",
+    fontSize: windowWidth*0.05,
+  },
 });

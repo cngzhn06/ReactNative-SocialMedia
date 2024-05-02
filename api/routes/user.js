@@ -166,4 +166,24 @@ router.get("/profile/:userId", async(req,res) => {
 })
 
 
+router.put('/update-username', async (req, res) => {
+  const { userId, newUsername } = req.body;
+
+  try {
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: 'Kullanıcı bulunamadı' });
+    }
+
+    user.name = newUsername;
+    await user.save();
+
+    res.status(200).json({ message: 'Kullanıcı adı güncellendi', user });
+  } catch (error) {
+    console.error('Kullanıcı adı güncellenirken hata:', error);
+    res.status(500).json({ message: 'Kullanıcı adı güncellenemedi' });
+  }
+});
+
+
 module.exports = router;
