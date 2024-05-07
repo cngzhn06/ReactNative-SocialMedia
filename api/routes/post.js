@@ -102,4 +102,29 @@ router.get("/user/:userId/posts", async (req, res) => {
 });
 
 
+router.delete("/user/:userId/posts/:postId", async (req, res) => {
+  try {
+    const { userId, postId } = req.params;
+    console.log("🚀 ~ router.delete ~ postId:", postId)
+    console.log("🚀 ~ router.delete ~ userId:", userId)
+
+    const post = await Post.findById(postId);
+    if (!post) {
+      return res.status(404).json({ message: "Post not found" });
+    }
+
+    if (post.user.toString() !== userId) {
+      return res.status(403).json({ message: "Unauthorized to delete this post" });
+    }
+
+    await Post.findByIdAndDelete(postId);
+
+    res.status(200).json({ message: "Post successfully deleted" });
+  } catch (error) {
+    console.error("Error deleting post:", error);
+    res.status(500).json({ message: "Error deleting post" });
+  }
+});
+
+
 module.exports = router;

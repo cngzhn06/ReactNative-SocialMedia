@@ -6,10 +6,13 @@ import {
   Text,
   StyleSheet,
   Dimensions,
+  View,
+  TouchableOpacity,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { UserType } from "../UserContext";
 import axios from "axios";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 const windowWidth = Dimensions.get("window").width;
 
@@ -30,35 +33,50 @@ export default function EditProfileScreen() {
 
       if (response.status === 200) {
         console.log("Kullanıcı adı güncellendi:", response.data.user);
-        navigation.navigate("Home"); // Başarılı olursa ana ekrana yönlendir
+        navigation.goBack();
       } else {
-        console.error("Hata:", response.data.message); // Hata durumunda konsola yaz
+        console.error("Hata:", response.data.message);
       }
     } catch (error) {
       console.error("API çağrısı sırasında hata:", error);
     }
   };
 
-  const handleBack = async () => {
-    navigation.navigate("Home");
+  const handleBack = () => {
+    console.log("geri dön");
+    navigation.goBack();
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <TextInput
-        style={styles.input}
-        value={newUsername}
-        onChangeText={setNewUsername}
-        autoCapitalize="none"
-        placeholder="Yeni kullanıcı adı"
-      />
-      <Pressable style={styles.button} onPress={handleUpdateUsername}>
-        <Text style={styles.buttonText}>Güncelle</Text>
-      </Pressable>
-      <Pressable style={styles.button} onPress={handleBack}>
-        <Text style={styles.buttonText}>geri</Text>
-      </Pressable>
-    </SafeAreaView>
+    <>
+      <SafeAreaView style={styles.container}>
+        <View
+          style={{
+            position: "absolute",
+            top: windowWidth * 0.15,
+            right: windowWidth * 0.05,
+          }}
+        >
+          <Pressable onPress={handleBack}>
+            <MaterialCommunityIcons
+              name="window-close"
+              size={44}
+              color="black"
+            />
+          </Pressable>
+        </View>
+        <TextInput
+          style={styles.input}
+          value={newUsername}
+          onChangeText={setNewUsername}
+          autoCapitalize="none"
+          placeholder="Yeni kullanıcı adı"
+        />
+        <Pressable style={styles.button} onPress={handleUpdateUsername}>
+          <Text style={styles.buttonText}>Güncelle</Text>
+        </Pressable>
+      </SafeAreaView>
+    </>
   );
 }
 
@@ -71,18 +89,18 @@ const styles = StyleSheet.create({
   input: {
     borderWidth: 1,
     borderColor: "gray",
-    padding: windowWidth*0.02,
-    marginBottom: windowWidth*0.04,
+    padding: windowWidth * 0.02,
+    marginBottom: windowWidth * 0.04,
     width: windowWidth * 0.8,
-    borderRadius:windowWidth*0.03
+    borderRadius: windowWidth * 0.03,
   },
   button: {
-    backgroundColor: "black",
-    padding: windowWidth*0.03,
-    borderRadius: windowWidth*0.04,
+    backgroundColor: "gray",
+    padding: windowWidth * 0.03,
+    borderRadius: windowWidth * 0.04,
   },
   buttonText: {
     color: "white",
-    fontSize: windowWidth*0.05,
+    fontSize: windowWidth * 0.05,
   },
 });
