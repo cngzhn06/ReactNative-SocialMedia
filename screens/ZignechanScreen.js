@@ -11,6 +11,7 @@ import {
 import { UserType } from "../UserContext";
 import axios from "axios";
 
+
 export default function ZignechanScreen() {
   const [content, setContent] = useState("");
   const { userId, setUserId } = useContext(UserType);

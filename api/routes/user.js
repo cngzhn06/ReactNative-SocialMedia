@@ -185,5 +185,21 @@ router.put('/update-username', async (req, res) => {
   }
 });
 
+router.get("/followers/:userId", async (req, res) => {
+  try {
+    const userId = req.params.userId;
+
+    const user = await User.findById(userId).populate('followers', 'name email');
+    if (!user) {
+      return res.status(404).json({ message: "Kullanıcı bulunamadı" });
+    }
+
+    res.status(200).json(user.followers);
+  } catch (error) {
+    console.log("🚀 ~ error fetching followers:", error);
+    res.status(500).json({ message: "Takipçi bilgileri alınamadı" });
+  }
+});
+
 
 module.exports = router;

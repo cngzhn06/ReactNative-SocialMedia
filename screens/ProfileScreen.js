@@ -1,3 +1,4 @@
+import React, { useEffect, useState, useContext } from "react";
 import {
   StyleSheet,
   Text,
@@ -6,11 +7,10 @@ import {
   Pressable,
   FlatList,
   Dimensions,
-  Modal,
   TouchableOpacity,
-  TouchableWithoutFeedback,
+  Modal,
+  Button,
 } from "react-native";
-import React, { useEffect, useState, useContext } from "react";
 import axios from "axios";
 import { UserType } from "../UserContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -22,8 +22,10 @@ const windowWidth = Dimensions.get("window").width;
 const ProfileScreen = () => {
   const [user, setUser] = useState("");
   const [userPosts, setUserPosts] = useState([]);
-  const [modalVisible, setModalVisible] = useState(false);
+  const [followers, setFollowers] = useState([]);
   const [selectedPost, setSelectedPost] = useState(null);
+  const [isMenuVisible, setIsMenuVisible] = useState(false);
+  const [isModalVisible, setIsModalVisible] = useState(false);
   const navigation = useNavigation();
   const { userId } = useContext(UserType);
 
@@ -49,14 +51,27 @@ const ProfileScreen = () => {
     }
   };
 
+  const fetchFollowers = async () => {
+    try {
+      const response = await axios.get(
+        `http://localhost:5010/api/followers/${userId}`
+      );
+      setFollowers(response.data);
+    } catch (error) {
+      console.error("Followers fetch error:", error);
+    }
+  };
+
   useEffect(() => {
     fetchProfile();
     fetchUserPosts();
+    fetchFollowers();
   }, [userId]);
 
   const handleRefresh = () => {
     fetchProfile();
     fetchUserPosts();
+    fetchFollowers();
   };
 
   const renderPostItem = ({ item }) => (
@@ -66,16 +81,27 @@ const ProfileScreen = () => {
         <Text style={styles.dateText}>
           Oluşturulma Tarihi: {item.createdAt.substring(0, 10)}
         </Text>
+        <Text style={styles.postLikesText}>{item?.likes?.length} Beğeni</Text>
       </View>
-      <Pressable
+      <TouchableOpacity
         style={styles.dotIcon}
         onPress={() => {
           setSelectedPost(item);
-          setModalVisible(true);
+          setIsMenuVisible(!isMenuVisible);
         }}
       >
         <MaterialCommunityIcons name="dots-vertical" size={24} color="black" />
-      </Pressable>
+      </TouchableOpacity>
+      {isMenuVisible && selectedPost === item && (
+        <View style={styles.menuContainer}>
+          <TouchableOpacity style={styles.menuOption} onPress={editPost}>
+            <Text>Düzenle</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.menuOption} onPress={deletePost}>
+            <Text>Sil</Text>
+          </TouchableOpacity>
+        </View>
+      )}
     </View>
   );
 
@@ -92,7 +118,12 @@ const ProfileScreen = () => {
         console.error("Error deleting post:", error);
       }
     }
-    setModalVisible(false);
+    setIsMenuVisible(false);
+  };
+
+  const editPost = () => {
+    setIsMenuVisible(false);
+    navigation.navigate("Edit", { post: selectedPost });
   };
 
   const logout = async () => {
@@ -122,9 +153,11 @@ const ProfileScreen = () => {
               uri: "https://cdn-icons-png.flaticon.com/128/149/149071.png",
             }}
           />
-          <Text style={styles.followersText}>
-            {user?.followers?.length} followers
-          </Text>
+          <TouchableOpacity onPress={() => setIsModalVisible(true)}>
+            <Text style={styles.followersText}>
+              {followers.length} Takipçi
+            </Text>
+          </TouchableOpacity>
         </View>
 
         <View style={styles.buttonRow}>
@@ -151,33 +184,22 @@ const ProfileScreen = () => {
       </View>
 
       <Modal
+        animationType="slide"
         transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => setModalVisible(false)}
+        visible={isModalVisible}
+        onRequestClose={() => setIsModalVisible(false)}
       >
-        <TouchableWithoutFeedback onPress={() => setModalVisible(false)}>
-          <View style={styles.modalBackground}>
-            <TouchableWithoutFeedback>
-              <View style={styles.modalContainer}>
-                <TouchableOpacity
-                  style={styles.modalOption}
-                  onPress={() => {
-                    setModalVisible(false);
-                    navigation.navigate("Home", { post: selectedPost });
-                  }}
-                >
-                  <Text>Edit</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={styles.modalOption}
-                  onPress={deletePost}
-                >
-                  <Text>Delete</Text>
-                </TouchableOpacity>
-              </View>
-            </TouchableWithoutFeedback>
-          </View>
-        </TouchableWithoutFeedback>
+        <View style={styles.modalView}>
+          <Text style={styles.modalTitle}>Takipçiler</Text>
+          <FlatList
+            data={followers}
+            keyExtractor={(item) => item._id}
+            renderItem={({ item }) => (
+              <Text style={styles.followerName}>{item.name}</Text>
+            )}
+          />
+          <Button title="Kapat" onPress={() => setIsModalVisible(false)} />
+        </View>
       </Modal>
     </View>
   );
@@ -185,55 +207,54 @@ const ProfileScreen = () => {
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 55,
-    padding: 15,
+    marginTop: windowWidth * 0.1,
+    padding: windowWidth * 0.05,
   },
   headerRow: {
     flexDirection: "row",
     alignItems: "center",
-    gap: 10,
+    gap: windowWidth * 0.04,
   },
   userName: {
-    fontSize: 20,
+    fontSize: windowWidth * 0.07,
     fontWeight: "bold",
   },
   userTag: {
-    paddingHorizontal: 7,
-    paddingVertical: 5,
-    borderRadius: 8,
+    paddingHorizontal: windowWidth * 0.014,
+    paddingVertical: windowWidth * 0.01,
+    borderRadius: windowWidth * 0.02,
     backgroundColor: "#D0D0D0",
   },
   profileRow: {
     flexDirection: "row",
     alignItems: "center",
-    gap: 20,
-    marginTop: 15,
+    gap: windowWidth * 0.06,
+    marginTop: windowWidth * 0.03,
   },
   profileImage: {
-    width: 60,
-    height: 60,
-    borderRadius: 30,
+    width: windowWidth * 0.15,
+    height: windowWidth * 0.15,
+    borderRadius: windowWidth * 0.04,
     resizeMode: "contain",
   },
   followersText: {
     color: "gray",
-    fontSize: 15,
-    marginTop: 10,
+    fontSize: windowWidth * 0.04,
   },
   buttonRow: {
     flexDirection: "row",
     alignItems: "center",
-    gap: 10,
-    marginTop: 20,
+    gap: windowWidth * 0.03,
+    marginTop: windowWidth * 0.04,
   },
   button: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    padding: 10,
+    padding: windowWidth * 0.03,
     borderColor: "#D0D0D0",
-    borderWidth: 1,
-    borderRadius: 5,
+    borderWidth: windowWidth * 0.005,
+    borderRadius: windowWidth * 0.03,
   },
   myPostView: {
     marginTop: windowWidth * 0.02,
@@ -241,35 +262,66 @@ const styles = StyleSheet.create({
   postItem: {
     flexDirection: "row",
     alignItems: "center",
-    padding: 10,
-    borderWidth: 1,
+    padding: windowWidth * 0.05,
+    borderWidth: windowWidth * 0.005,
     borderColor: "#ddd",
-    borderRadius: 10,
-    marginVertical: 5,
+    borderRadius: windowWidth * 0.03,
+    marginVertical: windowWidth * 0.02,
   },
   dateText: {
+    marginVertical: windowWidth * 0.003,
     color: "gray",
   },
   dotIcon: {
     justifyContent: "center",
     alignItems: "center",
   },
-  modalBackground: {
+  menuContainer: {
+    position: "absolute",
+    right: windowWidth * 0.1,
+    top: windowWidth * 0.01,
+    backgroundColor: "white",
+    borderRadius: windowWidth * 0.02,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  menuOption: {
+    padding: windowWidth * 0.02,
+  },
+  postLikesText: {
+    marginVertical: windowWidth * 0.003,
+    color: "gray",
+  },
+  modalView: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
-  },
-  modalContainer: {
-    backgroundColor: "#fff",
-    padding: 20,
+    marginTop: windowWidth*0.14,
+    backgroundColor: "white",
+    padding: windowWidth*0.04,
     borderRadius: 10,
-    width: 150,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
   },
-  modalOption: {
-    padding: 10,
-    borderBottomColor: "#ddd",
-    borderBottomWidth: 1,
+  modalTitle: {
+    fontSize: 20,
+    marginBottom: 15,
+  },
+  followerName: {
+    fontSize: 18,
+    padding: 5,
   },
 });
 
