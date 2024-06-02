@@ -93,9 +93,8 @@ export default function HomeScreen() {
       <View style={{ alignItems: "center", marginTop: 20 }}>
         <Image
           style={styles.logoImage}
-          source={{
-            uri: "https://upload.wikimedia.org/wikipedia/commons/4/47/PNG_transparency_demonstration_1.png",
-          }}
+          source={require('../assets/zignechan.png')}
+
         />
       </View>
 
@@ -105,7 +104,9 @@ export default function HomeScreen() {
             <View style={styles.postContainer}>
               <Image
                 style={styles.postImage}
-                source={require('../assets/indir.jpeg')}
+                source={{
+                  uri: "https://cdn-icons-png.flaticon.com/128/149/149071.png",
+                }}
               />
               <Text style={styles.postUserName}>{post?.user?.name}</Text>
             </View>

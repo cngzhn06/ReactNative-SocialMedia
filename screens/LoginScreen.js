@@ -65,9 +65,7 @@ export default function LoginScreen() {
       <View style={styles.logoView}>
         <Image
           style={styles.logo}
-          source={{
-            uri: "https://vectorflags.s3.amazonaws.com/flags/lk-circle-01.png",
-          }}
+          source={require('../assets/zignechan.png')}
         />
       </View>
 
@@ -114,7 +112,7 @@ export default function LoginScreen() {
 
         <View style={styles.buttonCont}>
           <Pressable style={styles.pressable} onPress={handleLogin}>
-            <Text style={styles.pressableText}>Login</Text>
+            <Text style={styles.pressableText}>Giriş yap</Text>
           </Pressable>
         </View>
 
@@ -138,8 +136,8 @@ const styles = StyleSheet.create({
     marginTop: windowWidth * 0.1,
   },
   logo: {
-    width: windowWidth * 0.5,
-    height: windowWidth * 0.4,
+    width: windowWidth * 0.7,
+    height: windowWidth * 0.7,
     resizeMode: "contain",
   },
   textCont: {
@@ -149,10 +147,10 @@ const styles = StyleSheet.create({
   titleText: {
     fontSize: windowWidth * 0.04,
     fontWeight: "bold",
-    marginTop: windowWidth * 0.05,
+    marginTop: windowWidth * 0.03,
   },
   inputCont: {
-    marginTop: windowWidth * 0.07,
+    marginTop: windowWidth * 0.09,
   },
   inputWrap: {
     flexDirection: "row",

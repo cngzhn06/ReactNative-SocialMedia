@@ -52,9 +52,7 @@ export default function ZignechanScreen() {
             borderRadius: 20,
             resizeMode: "contain",
           }}
-          source={{
-            uri: "https://upload.wikimedia.org/wikipedia/commons/4/47/PNG_transparency_demonstration_1.png",
-          }}
+          source={require('../assets/zignechan.png')}
         />
         <Text>zignechan</Text>
       </View>

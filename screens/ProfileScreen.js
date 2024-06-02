@@ -10,6 +10,7 @@ import {
   TouchableOpacity,
   Modal,
   Button,
+  Alert,
 } from "react-native";
 import axios from "axios";
 import { UserType } from "../UserContext";
@@ -21,6 +22,7 @@ const windowWidth = Dimensions.get("window").width;
 
 const ProfileScreen = () => {
   const [user, setUser] = useState("");
+  console.log("🚀 ~ ProfileScreen ~ user:", user.joinedDate)
   const [userPosts, setUserPosts] = useState([]);
   const [followers, setFollowers] = useState([]);
   const [selectedPost, setSelectedPost] = useState(null);
@@ -123,7 +125,7 @@ const ProfileScreen = () => {
 
   const editPost = () => {
     setIsMenuVisible(false);
-    navigation.navigate("Edit", { post: selectedPost });
+    Alert.alert('Düzenle')
   };
 
   const logout = async () => {
@@ -157,6 +159,10 @@ const ProfileScreen = () => {
             <Text style={styles.followersText}>
               {followers.length} Takipçi
             </Text>
+
+            <Text>
+            </Text>
+            
           </TouchableOpacity>
         </View>
 

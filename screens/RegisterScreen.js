@@ -52,9 +52,8 @@ export default function RegisterScreen() {
       <View style={styles.logoView}>
         <Image
           style={styles.logo}
-          source={{
-            uri: "https://vectorflags.s3.amazonaws.com/flags/lk-circle-01.png",
-          }}
+          source={require('../assets/zignechan.png')}
+
         />
       </View>
 
@@ -160,24 +159,24 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   logoView: {
-    marginTop: windowWidth * 0.1,
+    marginTop: windowWidth * 0.001,
   },
   logo: {
-    width: windowWidth * 0.5,
-    height: windowWidth * 0.4,
+    width: windowWidth * 0.7,
+    height: windowWidth * 0.7,
     resizeMode: "contain",
   },
   text: {
     fontSize: windowWidth * 0.04,
     fontWeight: "bold",
-    marginTop: windowWidth * 0.05,
+    marginTop: windowWidth * 0.005,
   },
   textCont: {
     justifyContent: "center",
     alignItems: "center",
   },
   inputCont: {
-    marginTop: windowWidth * 0.07,
+    marginTop: windowWidth * 0.03,
   },
   inputWrap: {
     flexDirection: "row",

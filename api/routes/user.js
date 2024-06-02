@@ -103,7 +103,6 @@ const generateSecretKey = () => {
 
 router.get("/user/:userId", (req, res) => {
   try {
-    console.log("deneme");
     const loggedInUserId = req.params.userId;
 
     User.find({ _id: { $ne: loggedInUserId } })
