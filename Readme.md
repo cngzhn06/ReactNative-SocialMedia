@@ -7,9 +7,9 @@ Bu proje, kullanıcıların yazılar paylaşabildiği, beğenebildiği ve takip 
 ## Özellikler
 
 - Kullanıcı kaydı ve e-posta onaylama
-- Giriş yapma
 - Yazıları beğenme ve kendi yazılarını paylaşma
 - Takip etme ve takibi bırakma
+- Takipçileri görme
 
 ## Ekran Görüntüleri
 
